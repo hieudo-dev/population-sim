@@ -5,17 +5,22 @@ from utils import logpop, logper, log
 import heapq
 import numpy as nmp
 
+# Edad <  |   M   |    F 
+#   12    |     .0005 
+#   45    |  .001 | .002
+#   76    |  .01  | .02
+#   125   |  .1   | .2
 
 def IsDying(person):
 	prob = 0
 	if person.age < 12:
-		prob = .25
+		prob = .0005
 	elif person.age < 45:
-		prob = .1 if person is Male else .15
+		prob = .001 if person is Male else .002
 	elif person.age < 76:
-		prob = .3 if person is Male else .35
+		prob = .01 if person is Male else .02
 	else:
-		prob = .7 if person is Male else .65
+		prob = .1 if person is Male else .2
 	return nmp.random.uniform() <= prob
 
 class Simulator:
@@ -87,7 +92,7 @@ class Simulator:
 				self.deaths += 1
 				log("X Died at age ", person.age)
 
-		logpop(self.population)
+		# logpop(self.population)
 		log("Population: ", self.population.__len__())
 		log("Deaths: ", self.deaths)
 		log("Births: ", self.births)
@@ -95,5 +100,5 @@ class Simulator:
 		log("Time: ", self.time)
 
 logging = True
-s = Simulator(10,10, 600)
+s = Simulator(10,10, 1200)
 s.Execute()

@@ -19,17 +19,17 @@ class Female(Person):
 			# Let's try for a baby :)
 			prob = 0
 			if self.age < 15:
-				prob = .2
+				prob = .005
 			elif self.age < 21:
-				prob = .45
-			elif self.age < 35:
-				prob = .8
-			elif self.age < 45:
-				prob = .4
-			elif self.age < 60:
-				prob = .2
-			elif self.age <= 125:
 				prob = .05
+			elif self.age < 35:
+				prob = .15
+			elif self.age < 45:
+				prob = .05
+			elif self.age < 60:
+				prob = .01
+			elif self.age <= 125:
+				prob = .002
 			
 			if Uniform() <= prob:
 				self.isPregnant = True
