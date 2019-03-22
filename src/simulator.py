@@ -26,6 +26,7 @@ class Simulator:
 	maxTime = 0
 	births = 0
 	peakCount = 0
+	deaths = 0
 
 	def __init__(self, M, F, maxTime):
 		self.GeneratePopulation(M, F)
@@ -83,10 +84,12 @@ class Simulator:
 				person.BreakUpCouple()
 				person.isDead = True
 				self.population.remove(person)
+				self.deaths += 1
 				log("X Died at age ", person.age)
 
 		logpop(self.population)
 		log("Population: ", self.population.__len__())
+		log("Deaths: ", self.deaths)
 		log("Births: ", self.births)
 		log("Peak Population: ", self.peakCount)
 		log("Time: ", self.time)
