@@ -57,4 +57,5 @@ class Female(Person):
 				childs.append(Female())
 
 		self.isPregnant = False
+		self.childCount += childs.__len__()
 		return childs
