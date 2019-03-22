@@ -1,2 +1,4 @@
 docs/
 *.cs
+__pycache__/
+*.json
