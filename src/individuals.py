@@ -10,7 +10,6 @@ class Male(Person):
 
 class Female(Person):
 	isPregnant = False
-	dueDate = -1
 
 	def TryForBaby(self, currentTime):
 
@@ -33,7 +32,6 @@ class Female(Person):
 			
 			if Uniform() <= prob:
 				self.isPregnant = True
-				self.dueDate = currentTime + 1
 				return True
 		return False
 
