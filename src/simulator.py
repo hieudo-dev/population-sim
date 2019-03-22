@@ -1,6 +1,7 @@
 from individuals import Female, Male, Person
 from math import floor
 from events import BirthDayEvent, GiveBirthEvent
+from utils import logpop, logper, log
 import heapq
 import numpy as nmp
 
@@ -16,17 +17,6 @@ def IsDying(person):
 	else:
 		prob = .7 if person is Male else .65
 	return nmp.random.uniform() <= prob
-
-def printpop(pop):
-	for i in pop:
-		printper(i)
-
-def printper(i):
-	if type(i) is Female:
-		print("F ", i.age, i.IsSingle())
-	else:
-		print("M ", i.age, i.IsSingle())
-
 
 class Simulator:
 	population = []
@@ -64,7 +54,7 @@ class Simulator:
 
 
 	def Execute(self):
-		printpop(self.population)
+		logpop(self.population)
 		while self.events != []:
 			time, secondarykey, person, event = heapq.heappop(self.events)
 			self.time = time
@@ -93,13 +83,14 @@ class Simulator:
 				person.BreakUpCouple()
 				person.isDead = True
 				self.population.remove(person)
-				# print("X Died at age ", person.age)
+				log("X Died at age ", person.age)
 
-		# printpop(self.population)
-		print("Population: ", self.population.__len__())
-		print("Births: ", self.births)
-		print("Peak Population: ", self.peakCount)
-		print("Time: ", self.time)
+		logpop(self.population)
+		log("Population: ", self.population.__len__())
+		log("Births: ", self.births)
+		log("Peak Population: ", self.peakCount)
+		log("Time: ", self.time)
 
+logging = True
 s = Simulator(10,10, 600)
 s.Execute()

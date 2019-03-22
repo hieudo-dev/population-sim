@@ -1,5 +1,6 @@
 from person import Person
 from randoms import Uniform
+from utils import log
 
 class Male(Person):
 	def FindCouple(self, population):
@@ -56,6 +57,7 @@ class Female(Person):
 			else:
 				childs.append(Female())
 
+		log("X gave birth at age ", self.age)
 		self.isPregnant = False
 		self.childCount += childs.__len__()
 		return childs
