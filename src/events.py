@@ -13,7 +13,6 @@ def BirthDayEvent(person, simulator):
 @Event
 def GiveBirthEvent(person, simulator):
 	childs = person.GiveBirth()
-	print("X Gave birth at age ", person.age)
 	for child in childs:
 		simulator.population.append(child)
 		simulator.AddEvent(child, BirthDayEvent, simulator.time + 12)
