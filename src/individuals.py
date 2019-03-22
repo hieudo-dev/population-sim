@@ -4,7 +4,7 @@ from randoms import Uniform
 class Male(Person):
 	def FindCouple(self, population):
 		for girl in population:
-			if girl is Female and self.Like(girl):
+			if type(girl) is Female and self.Like(girl):
 				self.GoOutWith(girl)
 	
 
