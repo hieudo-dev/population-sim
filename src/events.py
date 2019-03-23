@@ -17,3 +17,7 @@ def GiveBirthEvent(person, simulator):
 		simulator.population.append(child)
 		simulator.AddEvent(child, BirthDayEvent, simulator.time + 12)
 	simulator.births += childs.__len__()
+
+@Event
+def MovingOn(person, simulator):
+	person.isSad = False

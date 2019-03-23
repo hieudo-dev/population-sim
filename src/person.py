@@ -62,9 +62,12 @@ class Person:
 		# The crisis can make the couple break up
 		if Uniform() <= .2:
 			# Break up :(
-			self.BreakUpCouple()
+			return self.BreakUpCouple()
+		return None
 			
-	def HeartbreakDuration(self):
+	def HaveDepression(self):
+		self.isSad = True
+
 		lmda = 0
 		if 12 < self.age and self.age < 15:
 			lmda =  3
@@ -84,8 +87,19 @@ class Person:
 
 	def BreakUpCouple(self):
 		if not self.IsSingle():
+			myDep = 0
+			coupleDep = 0
+			if not self.isDead:
+				myDep = self.HaveDepression()
+			if not self.couple.isDead:
+				coupleDep = self.couple.HaveDepression()
+			
+			couple = self.couple
 			self.couple.couple = None
 			self.couple = None
+
+			return (myDep, coupleDep, couple)
+		return None
 		
 
 	def WantsMoreChildren(self):

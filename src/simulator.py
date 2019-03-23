@@ -1,6 +1,6 @@
 from individuals import Female, Male, Person
 from math import floor
-from events import BirthDayEvent, GiveBirthEvent
+from events import BirthDayEvent, GiveBirthEvent, MovingOn
 from utils import logpop, logper, log
 import heapq
 import numpy as nmp
@@ -73,16 +73,19 @@ class Simulator:
 				person.FindCouple(self.population)
 
 			if type(person) is Male and not person.IsSingle():
-				person.HaveRelationshipCrisis()
+				CrisisResult = person.HaveRelationshipCrisis()
+				if CrisisResult:
+					myDep, coupleDep, couple = CrisisResult
+					self.AddEvent(person, MovingOn, self.time + myDep)
+					self.AddEvent(couple, MovingOn, self.time + coupleDep)
 
 			if type(person) is Female and not person.isPregnant:
 				if person.TryForBaby(self.time):
 					self.AddEvent(person, GiveBirthEvent, self.time + 9)
 
-
 			if IsDying(person):
-				person.BreakUpCouple()
 				person.isDead = True
+				person.BreakUpCouple()
 				self.population.remove(person)
 				self.deaths += 1
 				log("X Died at age ", person.age)
