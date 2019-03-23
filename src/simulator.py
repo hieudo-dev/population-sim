@@ -72,7 +72,7 @@ class Simulator:
 			if type(person) is Male and person.age >= 12:
 				person.FindCouple(self.population)
 
-			if type(person) is Male and not person.IsSingle():
+			if not person.IsSingle():
 				CrisisResult = person.HaveRelationshipCrisis()
 				if CrisisResult:
 					myDep, coupleDep, couple = CrisisResult
@@ -98,5 +98,5 @@ class Simulator:
 		log("Time: ", self.time)
 
 logging = True
-s = Simulator(10,10, 600)
+s = Simulator(100,100, 1200)
 s.Execute()

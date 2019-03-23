@@ -106,19 +106,24 @@ class Person:
 		return self.childCount < self.DesiredChildrenCount()
 
 	def DesiredChildrenCount(self):
-		# Amount of children:
-		# 1: .20 
-		# 2: .55 
-		# 3: .15
-		# 4: .8 
-		# 5: .2
+		rv = Uniform()
+		if rv <= .6:
+			return 1
+		
+		rv = Uniform()
+		if rv <= .75:
+			return 2
+		
+		rv = Uniform()
+		if rv <= .35:
+			return 3
+		
 		rv = Uniform()
 		if rv <= .2:
-			return 1
-		elif rv <= .75:
-			return 2
-		elif rv <= .90:
-			return 3
-		elif rv <= 98:
 			return 4
-		return 5
+		
+		rv = Uniform()
+		if rv <= .1:
+			return 5
+		
+		return 6
