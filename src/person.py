@@ -11,6 +11,7 @@ class Person:
 	def __init__(self, age=0):
 		self.age = age
 
+
 	def IsSingle(self):
 		return self.couple == None
 
@@ -33,10 +34,12 @@ class Person:
 		return Uniform() <= prob
 
 	def Like(self, individual):
-		return not self.isSad and self.age >= 12 and self.IsSingle() and self.WantsCouple() and \
-			not individual.isSad and individual.age >= 12 and	individual.IsSingle() and individual.WantsCouple()
+		return not self.isDead and not self.isSad and self.age >= 12 and self.IsSingle() and self.WantsCouple() and \
+		not individual.isDead and not individual.isSad and individual.age >= 12 and	individual.IsSingle() and individual.WantsCouple()
 
 	def GoOutWith(self, individual):
+		if individual.isDead or self.isDead:
+			return False
 		ageDif = abs(self.age - individual.age)
 		prob = 0
 		if ageDif < 5:
@@ -59,6 +62,8 @@ class Person:
 		return False
 
 	def HaveRelationshipCrisis(self):
+		if self.isDead:
+			return False
 		# The crisis can make the couple break up
 		if Uniform() <= .2:
 			# Break up :(
@@ -86,7 +91,7 @@ class Person:
 		return ceil(rv) if rv - floor(rv) >= .5 else floor(rv)
 
 	def BreakUpCouple(self):
-		if not self.IsSingle():
+		if not self.IsSingle() and not self.isDead:
 			myDep = 0
 			coupleDep = 0
 			if not self.isDead:
