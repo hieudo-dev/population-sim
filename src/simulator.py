@@ -1,8 +1,8 @@
 from individuals import Female, Male, Person
 from math import floor
 from events import BirthDayEvent, GiveBirthEvent, MovingOn
-from utils import logpop, logper, log
 from randoms import Uniform
+from utils import logpop, logper, log, ExtractData, ResetLogFolder
 import heapq
 
 
@@ -31,8 +31,6 @@ class Simulator:
 	deaths = 0
 	avgPregnantAge = 0.0
 	avgLifeExpectancy = 0.0
-	
-
 
 
 	def __init__(self, M, F, maxTime):
@@ -95,6 +93,8 @@ class Simulator:
 				person.BreakUpCouple()
 				self.population.remove(person)
 				self.deaths += 1
+				self.avgLifeExpectancy += person.age if self.avgLifeExpectancy != 0 else person.age * 2
+				self.avgLifeExpectancy /= 2.0
 				log("X Died at age ", person.age)
 
 		logpop(self.population)
@@ -104,6 +104,10 @@ class Simulator:
 		log("Peak Population: ", self.peakCount)
 		log("Time: ", self.time)
 
-logging = True
-s = Simulator(100,100, 1200)
-s.Execute()
+
+ResetLogFolder()
+
+for i in range(0,10000):
+	s = Simulator(250,250, 1200)
+	s.Execute()
+	ExtractData(s)
