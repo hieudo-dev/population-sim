@@ -2,8 +2,8 @@ from individuals import Female, Male, Person
 from math import floor
 from events import BirthDayEvent, GiveBirthEvent, MovingOn
 from utils import logpop, logper, log
+from randoms import Uniform
 import heapq
-import numpy as nmp
 
 
 def IsDying(person):
@@ -16,7 +16,7 @@ def IsDying(person):
 		prob = .3 if person is Male else .35
 	else:
 		prob = .7 if person is Male else .65
-	return nmp.random.uniform() <= prob
+	return Uniform() <= prob
 
 class Simulator:
 	population = []
@@ -24,9 +24,16 @@ class Simulator:
 	eventKey = 0
 	time = 0
 	maxTime = 0
+
+	# STATISTICS
 	births = 0
 	peakCount = 0
 	deaths = 0
+	avgPregnantAge = 0.0
+	avgLifeExpectancy = 0.0
+	
+
+
 
 	def __init__(self, M, F, maxTime):
 		self.GeneratePopulation(M, F)
@@ -36,13 +43,13 @@ class Simulator:
 		self.population = []
 
 		for i in range(M):
-			rv = nmp.random.uniform(12, 30)
+			rv = Uniform(12, 30)
 			p = Male(floor(rv))
 			self.population.append(p)
 			self.AddEvent(p, BirthDayEvent)
 
 		for i in range(F):
-			rv = nmp.random.uniform(12, 30)
+			rv = Uniform(12, 30)
 			p = Female(floor(rv))
 			self.population.append(p)
 			self.AddEvent(p, BirthDayEvent)
