@@ -1,3 +1,5 @@
+from utils import log
+
 def Event(func):
 	def wrapper(person):
 		def f(simulator):
@@ -17,6 +19,7 @@ def GiveBirthEvent(person, simulator):
 		simulator.population.append(child)
 		simulator.AddEvent(child, BirthDayEvent, simulator.time + 12)
 	simulator.births += childs.__len__()
+	log("X Gave birth at age ", person.age)
 
 @Event
 def MovingOn(person, simulator):
