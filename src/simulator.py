@@ -1,9 +1,9 @@
 from individuals import Female, Male, Person
 from math import floor
-from events import BirthDayEvent, GiveBirthEvent
-from utils import logpop, logper, log
+from events import BirthDayEvent, GiveBirthEvent, MovingOn
+from randoms import Uniform
+from utils import logpop, logper, log, ExtractData, ResetLogFolder
 import heapq
-import numpy as nmp
 
 # Edad <  |   M   |    F 
 #   12    |     .0005 
@@ -21,7 +21,7 @@ def IsDying(person):
 		prob = .01 if person is Male else .02
 	else:
 		prob = .1 if person is Male else .2
-	return nmp.random.uniform() <= prob
+	return Uniform() <= prob
 
 class Simulator:
 	population = []
@@ -29,9 +29,14 @@ class Simulator:
 	eventKey = 0
 	time = 0
 	maxTime = 0
+
+	# STATISTICS
 	births = 0
 	peakCount = 0
 	deaths = 0
+	avgPregnantAge = 0.0
+	avgLifeExpectancy = 0.0
+
 
 	def __init__(self, M, F, maxTime):
 		self.GeneratePopulation(M, F)
@@ -41,13 +46,13 @@ class Simulator:
 		self.population = []
 
 		for i in range(M):
-			rv = nmp.random.uniform(12, 30)
+			rv = Uniform(12, 30)
 			p = Male(floor(rv))
 			self.population.append(p)
 			self.AddEvent(p, BirthDayEvent)
 
 		for i in range(F):
-			rv = nmp.random.uniform(12, 30)
+			rv = Uniform(12, 30)
 			p = Female(floor(rv))
 			self.population.append(p)
 			self.AddEvent(p, BirthDayEvent)
@@ -77,19 +82,24 @@ class Simulator:
 			if type(person) is Male and person.age >= 12:
 				person.FindCouple(self.population)
 
-			if type(person) is Male and not person.IsSingle():
-				person.HaveRelationshipCrisis()
+			if not person.IsSingle():
+				CrisisResult = person.HaveRelationshipCrisis()
+				if CrisisResult:
+					myDep, coupleDep, couple = CrisisResult
+					self.AddEvent(person, MovingOn, self.time + myDep)
+					self.AddEvent(couple, MovingOn, self.time + coupleDep)
 
 			if type(person) is Female and not person.isPregnant:
 				if person.TryForBaby(self.time):
 					self.AddEvent(person, GiveBirthEvent, self.time + 9)
 
-
 			if IsDying(person):
-				person.BreakUpCouple()
 				person.isDead = True
+				person.BreakUpCouple()
 				self.population.remove(person)
 				self.deaths += 1
+				self.avgLifeExpectancy += person.age if self.avgLifeExpectancy != 0 else person.age * 2
+				self.avgLifeExpectancy /= 2.0
 				log("X Died at age ", person.age)
 
 		# logpop(self.population)
@@ -99,6 +109,10 @@ class Simulator:
 		log("Peak Population: ", self.peakCount)
 		log("Time: ", self.time)
 
-logging = True
-s = Simulator(10,10, 1200)
-s.Execute()
+
+ResetLogFolder()
+
+for i in range(0,10000):
+	s = Simulator(250,250, 1200)
+	s.Execute()
+	ExtractData(s)

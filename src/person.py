@@ -11,6 +11,7 @@ class Person:
 	def __init__(self, age=0):
 		self.age = age
 
+
 	def IsSingle(self):
 		return self.couple == None
 
@@ -33,10 +34,12 @@ class Person:
 		return Uniform() <= prob
 
 	def Like(self, individual):
-		return not self.isSad and self.age >= 12 and self.IsSingle() and self.WantsCouple() and \
-			not individual.isSad and individual.age >= 12 and	individual.IsSingle() and individual.WantsCouple()
+		return not self.isDead and not self.isSad and self.age >= 12 and self.IsSingle() and self.WantsCouple() and \
+		not individual.isDead and not individual.isSad and individual.age >= 12 and	individual.IsSingle() and individual.WantsCouple()
 
 	def GoOutWith(self, individual):
+		if individual.isDead or self.isDead:
+			return False
 		ageDif = abs(self.age - individual.age)
 		prob = 0
 		if ageDif < 5:
@@ -59,12 +62,17 @@ class Person:
 		return False
 
 	def HaveRelationshipCrisis(self):
+		if self.isDead:
+			return False
 		# The crisis can make the couple break up
 		if Uniform() <= .2:
 			# Break up :(
-			self.BreakUpCouple()
+			return self.BreakUpCouple()
+		return None
 			
-	def HeartbreakDuration(self):
+	def HaveDepression(self):
+		self.isSad = True
+
 		lmda = 0
 		if 12 < self.age and self.age < 15:
 			lmda =  3
@@ -83,28 +91,44 @@ class Person:
 		return ceil(rv) if rv - floor(rv) >= .5 else floor(rv)
 
 	def BreakUpCouple(self):
-		if not self.IsSingle():
+		if not self.IsSingle() and not self.isDead:
+			myDep = 0
+			coupleDep = 0
+			if not self.isDead:
+				myDep = self.HaveDepression()
+			if not self.couple.isDead:
+				coupleDep = self.couple.HaveDepression()
+			
+			couple = self.couple
 			self.couple.couple = None
 			self.couple = None
+
+			return (myDep, coupleDep, couple)
+		return None
 		
 
 	def WantsMoreChildren(self):
 		return self.childCount < self.DesiredChildrenCount()
 
 	def DesiredChildrenCount(self):
-		# Amount of children:
-		# 1: .20 
-		# 2: .55 
-		# 3: .15
-		# 4: .8 
-		# 5: .2
+		rv = Uniform()
+		if rv <= .6:
+			return 1
+		
+		rv = Uniform()
+		if rv <= .75:
+			return 2
+		
+		rv = Uniform()
+		if rv <= .35:
+			return 3
+		
 		rv = Uniform()
 		if rv <= .2:
-			return 1
-		elif rv <= .75:
-			return 2
-		elif rv <= .90:
-			return 3
-		elif rv <= 98:
 			return 4
-		return 5
+		
+		rv = Uniform()
+		if rv <= .1:
+			return 5
+		
+		return 6
